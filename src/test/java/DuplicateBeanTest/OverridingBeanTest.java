@@ -1,5 +1,6 @@
 package DuplicateBeanTest;
 
+import hello.core.order.OrderServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
@@ -12,11 +13,12 @@ public class OverridingBeanTest {
     @Test
     void OverridingBeanNameTest() {
         ApplicationContext ac = new AnnotationConfigApplicationContext(ClassConfiguration.class);
+
         /*
          * Result
          * -> Overriding bean definition for bean 'classAC' with a different definition:
-         *   replacing [Generic bean: class [DuplicateBeanTest.OverrideBeanTest$ClassConfiguration$ClassA]; scope=singleton; abstract=false; lazyInit=null; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
-         *        with [Generic bean: class [DuplicateBeanTest.OverrideBeanTest$ClassConfiguration$ClassB]; scope=singleton; abstract=false; lazyInit=null; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+         *   replacing [Generic bean: class [DuplicateBeanTest.OverrideBeanTest$ClassConfiguration$ClassA];
+         *        with [Generic bean: class [DuplicateBeanTest.OverrideBeanTest$ClassConfiguration$ClassB];
          * */
 
         Assertions.assertThat(ac.getBean("classAC")).isInstanceOf(ClassConfiguration.ClassB.class);
