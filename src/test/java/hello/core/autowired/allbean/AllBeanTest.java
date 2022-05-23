@@ -48,4 +48,9 @@ public class AllBeanTest {
         }
     }
 
+    static class DicountService {
+        private Map<String, DiscountPolicy> policyMap;
+        private List<DiscountPolicy> policies;
+    }
+
 }
