@@ -1,7 +1,8 @@
 package hello.core.scope;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 
@@ -37,26 +38,22 @@ public class SingletonWithPrototypeTest {
         int cl2Count = clientBean2.logic();
 
         // 기대값  : PrototypeBean 객체는 Scope가 prototype이니 각각 생성되겠지.
-        // 결과   : Err.
-        // 사유   : ClientBean 객체가 Singleton으로 되어 있기 때문에 객체 생성 시점에 이미 PrototypeBean이 주입되어 있어 해당 객체만 사용함.
-        /* 에러 메세지
-        * clientBean 1.logic
-          hello.core.scope.SingletonWithPrototypeTest$PrototypeBean@23941fb4
-          clientBean 2.logic
-          hello.core.scope.SingletonWithPrototypeTest$PrototypeBean@23941fb4
-        * */
+        // 결과   : Pass
+        // 사유   : 메소드 실행 시점에 ObjectProvider 객체에서 새로운 PrototypeBean 객체를 꺼내서 사용하기 때문에 테스트가 통과된다.
+        //         해당 개념을 "DL(Dependency Lookup)"이라고 하며 의존성을 주입하는 "DI"와는 다르게 의존객체를 "직접" 찾아서 사용한다.
+
         assertThat(cl1Count).isEqualTo(1);
-//        assertThat(cl2Count).isEqualTo(1);
-        assertThat(cl2Count).isEqualTo(2);
+        assertThat(cl2Count).isEqualTo(1);
     }
 
     @Scope("singleton")
-    @RequiredArgsConstructor
     static class ClientBean {
-        private final PrototypeBean prototypeBean;
+
+        @Autowired
+        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
 
         public int logic() {
-            System.out.println(this.prototypeBean);
+            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
             prototypeBean.addCount();
 
             return prototypeBean.getCount();
