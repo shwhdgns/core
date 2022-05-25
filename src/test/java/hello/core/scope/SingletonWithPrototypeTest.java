@@ -77,11 +77,5 @@ public class SingletonWithPrototypeTest {
         public void init() {
             System.out.println("prototype init");
         }
-
-        @PreDestroy
-        public void destroy() {
-            System.out.println("prototype destroy");
-        }
-
     }
 }
